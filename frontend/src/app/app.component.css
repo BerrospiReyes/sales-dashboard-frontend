@@ -1,0 +1,48 @@
+.container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+.header h1 { color: #1e293b; font-size: 2.5rem; margin-bottom: 2rem; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.filters { display: flex; gap: 2rem; background: #e2e8f0; }
+.filter-group { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+
+select {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+}
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 1rem; color: #64748b; border-bottom: 2px solid #f1f5f9; }
+td { padding: 1rem; border-bottom: 1px solid #f1f5f9; }
+.amount { color: #059669; font-weight: bold; }
+
+.chart-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+}
+
+.debug pre {
+  background: #1e293b;
+  color: #38bdf8;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}

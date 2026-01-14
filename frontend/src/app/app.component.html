@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="header">
+    <h1>📊 Sales Dashboard</h1>
+  </div>
+
+  <div class="card filters">
+    <div class="filter-group">
+      <label>Categoría</label>
+      <select [(ngModel)]="selectedCategory" (change)="onCategoryChange()">
+        <option value="">Todas las categorías</option>
+        <option value="Gaseosas">Gaseosas</option>
+        <option value="Aguas">Aguas</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Marca</label>
+      <select [(ngModel)]="selectedBrand" [disabled]="!selectedCategory">
+        <option value="">Todas las marcas</option>
+        <option *ngFor="let brand of availableBrands" [value]="brand">{{ brand }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card" *ngIf="categoryTotals.length">
+      <h2>Resumen por Categoría</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Monto Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of categoryTotals">
+            <td><strong>{{ item.category }}</strong></td>
+            <td class="amount">S/ {{ item.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card chart-placeholder">
+      <h2>Visualización</h2>
+      <div class="dummy-chart">
+        Aqui irá el gráfico Chart.js
+      </div>
+    </div>
+  </div>
+
+  <div class="card debug">
+    <h3>JSON Data (Debug)</h3>
+    <pre>{{ sales | json }}</pre>
+  </div>
+</div>
