@@ -2,10 +2,15 @@
   <h1>Dashboard de Ventas</h1>
 
   <div class="card">
-    <div class="card-header">
-      <strong>Registrar Venta</strong>
-    </div>
+    <div class="card-header"><strong>Registrar Venta</strong></div>
     <div class="form-grid">
+      <div class="input-field">
+        <label>Mes</label>
+        <select [(ngModel)]="newSale.month">
+          <option value="">Seleccione...</option>
+          <option *ngFor="let m of months" [value]="m">{{ m }}</option>
+        </select>
+      </div>
       <div class="input-field">
         <label>Categoría</label>
         <select [(ngModel)]="newSale.category" (change)="newSale.brand = ''">
@@ -14,7 +19,6 @@
           <option value="Aguas">Aguas</option>
         </select>
       </div>
-
       <div class="input-field">
         <label>Marca</label>
         <select [(ngModel)]="newSale.brand" [disabled]="!newSale.category">
@@ -24,24 +28,14 @@
           </option>
         </select>
       </div>
-
       <div class="input-field">
         <label>Cant.</label>
         <input type="number" [(ngModel)]="newSale.quantity" min="1" />
       </div>
-
       <div class="input-field">
         <label>Precio Unit.</label>
         <input type="number" [(ngModel)]="newSale.price" step="0.5" />
       </div>
-
-      <div class="total-preview">
-        <span>Total:</span>
-        <strong
-          >S/ {{ newSale.quantity * newSale.price | number : "1.2-2" }}</strong
-        >
-      </div>
-
       <button (click)="add()" class="btn-primary">Guardar</button>
     </div>
   </div>
@@ -49,19 +43,25 @@
   <div class="row">
     <div class="card col-2">
       <div class="row-header">
-        <h3>Visualización</h3>
+        <h3>Ventas por Marca</h3>
         <div class="filters">
+          <select [(ngModel)]="filter.month" (change)="renderCharts()">
+            <option value="">Todos los Meses</option>
+            <option *ngFor="let m of months" [value]="m">{{ m }}</option>
+          </select>
+
           <select
             [(ngModel)]="filter.category"
-            (change)="filter.brand = ''; renderChart()"
+            (change)="filter.brand = ''; renderCharts()"
           >
             <option value="">Todas las Categorías</option>
             <option value="Gaseosas">Gaseosas</option>
             <option value="Aguas">Aguas</option>
           </select>
+
           <select
             [(ngModel)]="filter.brand"
-            (change)="renderChart()"
+            (change)="renderCharts()"
             [disabled]="!filter.category"
           >
             <option value="">Todas las Marcas</option>
@@ -76,12 +76,34 @@
       </div>
     </div>
 
-    <div class="card col-1">
+    <div class="card col-1 goal-card">
+      <h3>Meta Mensual</h3>
+      <div class="goal-input">
+        <label>Objetivo (unidades):</label>
+        <input
+          type="number"
+          [(ngModel)]="targetGoal"
+          (change)="renderGoalChart()"
+        />
+      </div>
+      <div class="canvas-wrapper-goal">
+        <canvas id="goalChart"></canvas>
+        <div class="goal-label">
+          <span class="goal-num">{{ currentProgress }}</span>
+          <span class="goal-total">/ {{ targetGoal }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="card col-2">
       <h3>Detalle Histórico</h3>
       <div class="table-wrapper">
         <table class="minimal-table">
           <thead>
             <tr>
+              <th>Mes</th>
               <th>Marca</th>
               <th>Cant.</th>
               <th>P. Unit</th>
@@ -90,8 +112,9 @@
           </thead>
           <tbody>
             <tr *ngFor="let s of sales">
+              <td>{{ s.month }}</td>
               <td class="brand-info">
-                <img [src]="brandLogos[s.brand]" class="img-logo" alt="logo" />
+                <img [src]="brandLogos[s.brand]" class="img-logo" />
                 <span>{{ s.brand }}</span>
               </td>
               <td>{{ s.quantity }}</td>
@@ -104,32 +127,44 @@
         </table>
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="card summary blue-edge">
-      <h3>Total Aguas</h3>
-      <div class="stats">
+    <div class="col-1">
+      <div class="card summary blue-edge">
+        <h3>Total Aguas</h3>
         <p>
-          Cantidad: <strong>{{ getSum("Aguas").qty }}</strong>
+          Cant: <strong>{{ getSum("Aguas").qty }}</strong>
         </p>
         <p>
           Monto:
           <strong>S/ {{ getSum("Aguas").amt | number : "1.2-2" }}</strong>
         </p>
       </div>
-    </div>
 
-    <div class="card summary red-edge">
-      <h3>Total Gaseosas</h3>
-      <div class="stats">
+      <div class="card summary red-edge">
+        <h3>Total Gaseosas</h3>
         <p>
-          Cantidad: <strong>{{ getSum("Gaseosas").qty }}</strong>
+          Cant: <strong>{{ getSum("Gaseosas").qty }}</strong>
         </p>
         <p>
           Monto:
           <strong>S/ {{ getSum("Gaseosas").amt | number : "1.2-2" }}</strong>
         </p>
+      </div>
+
+      <div class="card summary green-edge">
+        <h3>Resumen por Marcas</h3>
+
+        <div
+          *ngFor="let brand of ['Coca Cola', 'Pepsi', 'San Luis', 'San Mateo']"
+          class="brand-row-summary"
+        >
+          <div class="brand-info">
+            <img [src]="brandLogos[brand]" class="img-logo" />
+            <span style="font-weight: 500">{{ brand }}</span>
+          </div>
+
+          <span class="badge-black"> {{ getBrandTotal(brand).qty }} und. </span>
+        </div>
       </div>
     </div>
   </div>

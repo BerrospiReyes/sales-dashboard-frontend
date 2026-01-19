@@ -6,7 +6,6 @@ import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
-// Consultas GraphQL
 const GET_SALES = gql`
   query GetSales {
     sales {
@@ -16,6 +15,7 @@ const GET_SALES = gql`
       quantity
       price
       amount
+      month
     }
   }
 `;
@@ -26,12 +26,14 @@ const ADD_SALE = gql`
     $brand: String!
     $quantity: Int!
     $price: Float!
+    $month: String!
   ) {
     addSale(
       category: $category
       brand: $brand
       quantity: $quantity
       price: $price
+      month: $month
     ) {
       id
       amount
@@ -46,20 +48,30 @@ const ADD_SALE = gql`
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
+
 export class AppComponent implements OnInit {
   sales: any[] = [];
   chart: any;
+  goalChart: any;
 
-  // Modelos para formularios y filtros
-  newSale = { category: '', brand: '', quantity: 1, price: 0 };
-  filter = { category: '', brand: '' };
-
-  // Configuración de marcas y logos (URLs externas para asegurar que carguen)
+  months = [
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre',
+  ];
   brands: any = {
     Gaseosas: ['Coca Cola', 'Pepsi'],
     Aguas: ['San Luis', 'San Mateo'],
   };
-
   brandLogos: any = {
     'Coca Cola':
       'https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg',
@@ -70,6 +82,12 @@ export class AppComponent implements OnInit {
     'San Mateo':
       'https://estudiocrater.com/wp-content/uploads/2017/11/SM-01-1.jpg',
   };
+
+  newSale = { category: '', brand: '', quantity: 1, price: 0, month: '' };
+  filter = { category: '', brand: '', month: '' };
+
+  targetGoal: number = 100;
+  currentProgress: number = 0;
 
   constructor(private apollo: Apollo) {}
 
@@ -82,7 +100,7 @@ export class AppComponent implements OnInit {
       .watchQuery<any>({ query: GET_SALES })
       .valueChanges.subscribe(({ data }) => {
         this.sales = data?.sales ?? [];
-        this.renderChart();
+        this.renderCharts();
       });
   }
 
@@ -90,6 +108,7 @@ export class AppComponent implements OnInit {
     if (
       !this.newSale.category ||
       !this.newSale.brand ||
+      !this.newSale.month ||
       this.newSale.price <= 0
     )
       return;
@@ -101,7 +120,13 @@ export class AppComponent implements OnInit {
         refetchQueries: [{ query: GET_SALES }],
       })
       .subscribe(() => {
-        this.newSale = { category: '', brand: '', quantity: 1, price: 0 };
+        this.newSale = {
+          category: '',
+          brand: '',
+          quantity: 1,
+          price: 0,
+          month: '',
+        };
       });
   }
 
@@ -113,56 +138,84 @@ export class AppComponent implements OnInit {
     };
   }
 
-  renderChart() {
+  renderCharts() {
+    this.renderMainChart();
+    this.renderGoalChart();
+  }
+
+  renderMainChart() {
     const ctx = document.getElementById('salesChart') as HTMLCanvasElement;
     if (!ctx) return;
 
-    const filteredSales = this.sales.filter((s) => {
-      const matchCat =
-        !this.filter.category || s.category === this.filter.category;
-      const matchBrand = !this.filter.brand || s.brand === this.filter.brand;
-      return matchCat && matchBrand;
-    });
+    const filtered = this.sales.filter(
+      (s) =>
+        (!this.filter.category || s.category === this.filter.category) &&
+        (!this.filter.brand || s.brand === this.filter.brand) &&
+        (!this.filter.month || s.month === this.filter.month)
+    );
 
     const grouped = new Map<string, number>();
-    filteredSales.forEach((s) => {
-      const current = grouped.get(s.brand) || 0;
-      grouped.set(s.brand, current + (s.amount || 0));
-    });
-
-    const labels = Array.from(grouped.keys());
-    const dataValues = Array.from(grouped.values());
-
-    const colors = labels.map((label) => {
-      const item = this.sales.find((s) => s.brand === label);
-      return item?.category === 'Gaseosas' ? '#ef4444' : '#3b82f6';
-    });
+    filtered.forEach((s) =>
+      grouped.set(s.brand, (grouped.get(s.brand) || 0) + s.amount)
+    );
 
     if (this.chart) this.chart.destroy();
-
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: labels,
+        labels: Array.from(grouped.keys()),
         datasets: [
           {
-            label: 'Monto Total (S/)',
-            data: dataValues,
-            backgroundColor: colors,
+            label: 'Monto S/',
+            data: Array.from(grouped.values()),
+            backgroundColor: Array.from(grouped.keys()).map((b) =>
+              this.sales.find((s) => s.brand === b)?.category === 'Gaseosas'
+                ? '#ef4444'
+                : '#3b82f6'
+            ),
             borderRadius: 5,
           },
         ],
       },
+      options: { responsive: true, maintainAspectRatio: false },
+    });
+  }
+
+  renderGoalChart() {
+    const ctx = document.getElementById('goalChart') as HTMLCanvasElement;
+    if (!ctx) return;
+
+    const filtered = this.sales.filter(
+      (s) => !this.filter.month || s.month === this.filter.month
+    );
+    this.currentProgress = filtered.reduce((acc, s) => acc + s.quantity, 0);
+    const remain = Math.max(0, this.targetGoal - this.currentProgress);
+
+    if (this.goalChart) this.goalChart.destroy();
+    this.goalChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Vendido', 'Faltante'],
+        datasets: [
+          {
+            data: [this.currentProgress, remain],
+            backgroundColor: ['#22c55e', '#e2e8f0'],
+            borderWidth: 0,
+          },
+        ],
+      },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-        },
-        scales: {
-          y: { beginAtZero: true },
-        },
+        cutout: '80%',
+        plugins: { legend: { display: false } },
       },
     });
+  }
+
+  getBrandTotal(brandName: string) {
+    const brandSales = this.sales.filter((s) => s.brand === brandName);
+    return {
+      qty: brandSales.reduce((acc, s) => acc + (s.quantity || 0), 0),
+      amt: brandSales.reduce((acc, s) => acc + (s.amount || 0), 0),
+    };
   }
 }
