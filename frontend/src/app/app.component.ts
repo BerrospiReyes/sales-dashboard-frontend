@@ -135,8 +135,6 @@ export class AppComponent implements OnInit {
     color: ({ marca }) => this.brandColors[marca] || '#cbd5e1',
     legend: { position: 'top', layout: 'horizontal' },
     
-    // === HE ELIMINADO LA SECCIÓN 'label' PARA QUITAR LOS PRECIOS DE LAS BARRAS ===
-
     meta: {
       mes: { type: 'cat', values: this.months },
       valor: { 
@@ -151,7 +149,6 @@ export class AppComponent implements OnInit {
         let html = `<div style="padding:10px;"><div style="font-weight:bold; margin-bottom:8px;">${title}</div>`;
         items.forEach((item: any) => {
           const logo = this.brandLogos[item.name] || '';
-          // Usamos item.data.valor para obtener el número real y darle formato
           const valNum = Number(item.data.valor) || 0;
           const displayValue = this.chartViewFilter.metric === 'Venta' 
             ? `S/ ${valNum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
@@ -192,7 +189,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  // Helpers de cálculo
   getQtyProfit(m: string) { return (this.tableData[m].quantity || 0) - (this.tableData[m].goalQty || 0); }
   getQtyVariation(m: string) {
     const row = this.tableData[m];
