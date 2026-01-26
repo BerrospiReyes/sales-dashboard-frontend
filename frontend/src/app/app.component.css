@@ -1,276 +1,310 @@
-/* BASE Y TIPOGRAFÍA */
-.p-20 {
-  padding: 30px;
-  max-width: 1400px;
-  margin: 0 auto;
-  font-family: "Segoe UI", Roboto, sans-serif;
-  background-color: #ffffff;
-  color: #334155;
+/* --- CONFIGURACIÓN DE COLORES Y VARIABLES --- */
+:host {
+  --primary-blue: #1e40af;     /* Azul intenso corporativo */
+  --bg-soft-blue: #dbeafe;     /* Fondo sección Volumen */
+  --bg-soft-gold: #fef3c7;     /* Fondo sección Ingresos */
+  --success-green: #10b981;    /* Verde éxito */
+  --danger-red: #ef4444;       /* Rojo error */
+  --text-dark: #1e293b;
+  --bg-main: #f1f5f9;          /* Fondo de la página */
+  --white: #ffffff;
 }
 
-h1 {
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-/* ESTRUCTURA */
-.row {
-  display: flex;
-  gap: 24px;
-  margin-bottom: 24px;
-  align-items: stretch;
-}
-
-.col-2 {
-  flex: 2;
-  min-width: 0;
-}
-.col-1 {
-  flex: 1;
-  min-width: 0;
+/* 1. CONTENEDOR PRINCIPAL (SINGLE PAGE) */
+.dashboard-wrapper {
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.card {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  padding: 10px;
+  background-color: var(--bg-main);
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  overflow: hidden; /* Evita el scroll fuera de la pantalla */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* FILTROS Y HEADERS*/
-.card-header {
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 15px;
-  display: block;
-}
-
-.row-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.filters {
-  display: flex;
-  gap: 8px;
-}
-
-.filters select {
-  padding: 6px 10px;
-  font-size: 12px;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  outline: none;
-}
-
-/* GRÁFICOS */
-/* Contenedor Barras */
-.canvas-wrapper {
-  height: 280px;
-  position: relative;
-  width: 100%;
-}
-
-.canvas-wrapper canvas {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Contenedor Metas */
-.canvas-wrapper-goal {
-  height: 180px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.goal-input {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 15px;
-}
-
-.goal-input label {
-  font-size: 14px;
-  color: #64748b;
-}
-
-.goal-input input {
-  width: 70px !important;
-  padding: 4px;
-  text-align: center;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: #fafafa;
-}
-
-.goal-label {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  pointer-events: none;
-}
-
-.goal-num {
-  font-size: 25px;
-  font-weight: 800;
-  color: #22c55e;
-  line-height: 1;
-}
-
-.goal-total {
-  font-size: 15px;
-  color: #888;
-  margin-top: 4px;
-}
-
-/* FORMULARIO Y TABLAS */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 20px;
-  align-items: end;
-}
-
-.input-field label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #64748b;
+/* 2. CABECERA: Respetando tu estructura original */
+.main-header {
+  flex: 0 0 auto; /* Altura fija según contenido */
+  background: var(--white);
+  padding: 8px 20px;
+  border-radius: 10px;
   margin-bottom: 8px;
-  display: block;
-}
-
-.form-grid select,
-.form-grid input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-}
-
-.btn-primary {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #2563eb;
-}
-
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.minimal-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.minimal-table th {
-  text-align: left;
-  padding: 10px;
-  font-size: 11px;
-  color: #94a3b8;
-  text-transform: uppercase;
-  border-bottom: 2px solid #f1f5f9;
-}
-
-.minimal-table td {
-  padding: 10px;
-  border-bottom: 1px solid #f8fafc;
-  font-size: 13px;
-}
-
-.brand-info {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-left: 6px solid var(--primary-blue);
   display: flex;
   align-items: center;
-  gap: 10px;
 }
-.img-logo {
-  width: 22px;
-  height: 22px;
+
+.left-content-group {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.filter-item label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--primary-blue);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.filter-item select {
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* Badge de Marca: Ajuste para que el logo no rompa la tabla */
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vertical-divider {
+  width: 2px;
+  height: 30px;
+  background: #e2e8f0;
+  margin: 0 5px;
+}
+
+.brand-badge img {
+  height: 35px;      /* Tamaño fijo para evitar que crezca */
+  width: auto;
+  max-width: 100px;
   object-fit: contain;
 }
 
-/* RESÚMENES */
-.summary {
-  padding: 16px 20px !important;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+.brand-text .tiny-label { 
+  font-size: 10px; 
+  color: #64748b; 
+  display: block;
+  line-height: 1;
 }
 
-.summary h3 {
-  font-size: 15px;
-  font-weight: 700;
+.brand-text .brand-name { 
+  font-size: 16px; 
+  font-weight: 900; 
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+
+/* 3. TABLA DE GESTIÓN: Ajuste dinámico */
+.table-section {
+  flex: 1; /* Toma el espacio disponible entre cabecera y gráfico */
+  background: var(--white);
+  border-radius: 10px;
+  overflow-y: auto; /* Solo scroll si la tabla es muy larga */
+  overflow-x: hidden;
   margin-bottom: 8px;
-}
-.summary p {
-  margin: 4px 0;
-  font-size: 14px;
-  color: #1e293b;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.blue-edge {
-  background: #eff6ff;
-  border-left: 5px solid #3b82f6;
-}
-.red-edge {
-  background: #fef2f2;
-  border-left: 5px solid #ef4444;
-}
-.green-edge {
-  background: #f0fdf4;
-  border-left: 5px solid #22c55e;
+.compact-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Fuerza a las columnas a no ensancharse */
 }
 
-.brand-row-summary {
+.compact-table th {
+  background: #334155;
+  color: white;
+  font-size: 11px;
+  padding: 6px;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.compact-table td {
+  padding: 4px;
+  border: 1px solid #f1f5f9;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Columna lateral estática */
+.sticky-col {
+  width: 170px;
+  background: #f8fafc !important;
+  font-weight: 700;
+  text-align: left !important;
+  padding-left: 12px !important;
+  border-right: 3px solid var(--bg-soft-blue) !important;
+  color: var(--text-dark);
+  position: sticky;
+  left: 0;
+  z-index: 5;
+}
+
+/* Separadores de sección con colores vibrantes */
+.section-divider {
+  background: var(--bg-soft-blue) !important;
+  color: var(--primary-blue);
+  font-weight: 800;
+  font-size: 11px;
+  text-align: left !important;
+  padding: 6px 12px !important;
+}
+
+.section-divider.blue {
+  background: var(--bg-soft-gold) !important;
+  color: #92400e;
+}
+
+/* Inputs de tabla */
+.cell-input {
+  width: 85%;
+  border: 2px solid #f1f5f9;
+  background: #f8fafc;
+  text-align: center;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 2px;
+  font-size: 13px;
+}
+
+.cell-input:focus {
+  border-color: var(--primary-blue);
+  background: white;
+  outline: none;
+}
+/* --- AJUSTE DEL SÍMBOLO S/ AL COSTADO --- */
+.input-with-symbol {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row; /* Fuerza alineación horizontal */
   align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  justify-content: center;
+  gap: 4px; /* Espacio entre el S/ y el cuadro */
 }
 
-.badge-black {
-  background: rgba(0, 0, 0, 0.06);
-  padding: 4px 10px;
-  border-radius: 15px;
-  font-weight: bold;
-  font-size: 12px;
+/* 4. SECCIÓN HISTOGRAMA: Proporción controlada */
+.chart-section-compact {
+  flex: 0 0 32%; /* Ocupa exactamente el 32% del alto total */
+  background: var(--white);
+  border-radius: 10px;
+  padding: 10px 15px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* RESPONSIVE */
-@media (max-width: 1024px) {
-  .row {
-    flex-direction: column;
+.chart-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-dark);
+  border-bottom: 2px solid var(--primary-blue);
+  margin: 0;
+  display: inline-block;
+  padding-bottom: 2px;
+}
+
+.chart-filters {
+  display: flex;
+  gap: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.filter-item-inline label { font-size: 11px; font-weight: 700; color: #64748b; }
+.filter-item-inline select { font-size: 11px; padding: 2px; border-radius: 4px; border: 1px solid #cbd5e1; }
+
+#histogram-container {
+  flex: 1; /* El gráfico se estira en el espacio sobrante de su tarjeta */
+  width: 100%;
+  min-height: 0;
+}
+
+/* UTILIDADES DE ESTADO */
+.text-success { color: var(--success-green); font-weight: 800; }
+.text-danger { color: var(--danger-red); font-weight: 800; }
+.bold { font-weight: 800; }
+
+.score-pill-mini {
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.btn-icon:hover {
+  background: var(--bg-soft-blue);
+  transform: scale(1.1);
+}
+
+/* --- AJUSTES RESPONSIVE --- */
+
+/* Para pantallas medianas (Laptops pequeñas o Tablets horizontales) */
+@media (max-width: 1200px) {
+  .sticky-col {
+    width: 140px; /* Reducimos la columna de etiquetas */
+    font-size: 12px;
   }
-  .col-1,
-  .col-2 {
-    width: 100%;
+  
+  .cell-input {
+    width: 95%; /* Maximizamos el espacio del input */
+    font-size: 12px;
+  }
+
+  .brand-text .brand-name {
+    font-size: 14px;
+  }
+}
+
+/* Para tablets y pantallas de menos de 900px */
+@media (max-width: 900px) {
+  .main-header {
+    padding: 5px 10px;
+  }
+
+  .left-content-group {
+    gap: 10px;
+    flex-wrap: wrap; /* Permite que los filtros bajen si no hay espacio */
+  }
+
+  .filter-item select {
+    font-size: 12px;
+    padding: 2px 5px;
+  }
+
+  /* Permitimos scroll horizontal SOLO en la tabla si la pantalla es muy angosta */
+  .table-section {
+    overflow-x: auto; 
+  }
+
+  .compact-table {
+    table-layout: auto; /* Permite que las celdas definan su ancho mínimo */
+    min-width: 800px;   /* Evita que los meses se aplasten demasiado */
+  }
+
+  .chart-section-compact {
+    flex: 0 0 40%; /* Damos un poco más de espacio al gráfico en pantallas chicas */
+  }
+}
+
+/* Ajuste para el símbolo S/ en pantallas reducidas */
+@media (max-width: 1024px) {
+  .input-with-symbol {
+    gap: 2px;
+  }
+  .symbol {
+    font-size: 10px;
   }
 }
